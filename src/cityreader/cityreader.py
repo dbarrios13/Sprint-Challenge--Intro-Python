@@ -1,6 +1,13 @@
 # Create a class to hold a city location. Call the class "City". It should have
 # fields for name, lat and lon (representing latitude and longitude).
+class City:
+  def __init__(self, name, lat, lon):
+    self.name = name
+    self.lat = lat
+    self.lon = lon
 
+  def __repr__(self):
+    return f'City("{self.name}", {self.lat}, {self.lon})'
 
 # We have a collection of US cities with population over 750,000 stored in the
 # file "cities.csv". (CSV stands for "comma-separated values".)
@@ -20,14 +27,23 @@ def cityreader(cities=[]):
   # TODO Implement the functionality to read from the 'cities.csv' file
   # For each city record, create a new City instance and add it to the 
   # `cities` list
-    
-    return cities
+  import csv
+
+  with open('cities.csv', newline='') as csvfile:
+    citiesfile = csv.reader(csvfile)
+    for row in citiesfile:
+      if row[0] == 'city':
+        continue
+      else:
+        cities.append(City(row[0], float(row[3]), float(row[4])))
+  return cities
 
 cityreader(cities)
 
 # Print the list of cities (name, lat, lon), 1 record per line.
 for c in cities:
     print(c)
+
 
 # STRETCH GOAL!
 #
@@ -59,6 +75,13 @@ for c in cities:
 # Salt Lake City: (40.7774,-111.9301)
 
 # TODO Get latitude and longitude values from the user
+first_set = input('Enter lat1,lon1 : ').split(',')
+second_set = input('Enter lat2,lon2 : ').split(',')
+
+lat1 = float(first_set[0])
+lon1 = float(first_set[1])
+lat2 = float(second_set[0])
+lon2 = float(second_set[1])
 
 def cityreader_stretch(lat1, lon1, lat2, lon2, cities=[]):
   # within will hold the cities that fall within the specified region
@@ -67,5 +90,25 @@ def cityreader_stretch(lat1, lon1, lat2, lon2, cities=[]):
   # TODO Ensure that the lat and lon valuse are all floats
   # Go through each city and check to see if it falls within 
   # the specified coordinates.
+  if(lat1 > lat2):
+    greater_lat = lat1
+    less_lat = lat2
+  else:
+    greater_lat = lat2
+    less_lat = lat1
+  
+  if(lon1 > lon2):
+    greater_lon = lon1
+    less_lon = lon2
+  else:
+    greater_lon = lon2
+    less_lon = lon1    
+
+  for i in cities: 
+    if i.lat >= less_lat and i.lat <= greater_lat:
+      if i.lon >=less_lon and i.lon <= greater_lon:
+        within.append(i) 
 
   return within
+
+print(cityreader_stretch(lat1, lon1, lat2, lon2, cities))
